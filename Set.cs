@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Linq;
 
 namespace Mathematical_Sets
@@ -7,15 +7,15 @@ namespace Mathematical_Sets
 	/// Implements a mathematical set - elements are not contained with multiplicity. There is no order (i.e. indexing) to the set.
 	/// </summary>
 
-	public class Set<T> : IEnumerable<T>
+	public class Set : IEnumerable
 	{
-		private List<T> underlyingList = new List<T>();
+		private List<object> underlyingList = new List<object>();
 
 		/// <summary>
 		/// Add an item to the set.
 		/// </summary>
 		/// <param name="items">The item to add to the set.</param>
-		public void Add(T item)
+		public void Add(object item)
 		{
 			if (underlyingList.Contains(item) == false) //If the list already contains it, don't add, since sets should only contain stuff once.
 			{
@@ -27,9 +27,9 @@ namespace Mathematical_Sets
 		/// Add items to the set.
 		/// </summary>
 		/// <param name="items">The items to add to the set.</param>
-		public void Add(T[] items)
+		public void Add(object[] items)
 		{
-			foreach (T item in items)
+			foreach (object item in items)
 			{
 				Add(item);
 			}
@@ -39,7 +39,7 @@ namespace Mathematical_Sets
 		/// Add items to the set.
 		/// </summary>
 		/// <param name="items">The items to add to the set.</param>
-		public void Add(List<T> items)
+		public void Add(List<object> items)
 		{
 			Add(items.ToArray());
 		}
@@ -48,17 +48,17 @@ namespace Mathematical_Sets
 		/// Add items to the set.
 		/// </summary>
 		/// <param name="items">The items to add to the set.</param>
-		public void Add(Set<T> items)
+		public void Add(Set items)
 		{
 			Add(items.ToArray());
 		}
 
 		/// <summary>
-		/// Determines whether an element is in the <c>Set<T></c>.
+		/// Determines whether an element is in the <c>Set</c>.
 		/// </summary>
 		/// <param name="item"></param>
 		/// <returns></returns>
-		public bool Contains(T item)
+		public bool Contains(object item)
 		{
 			return underlyingList.Contains(item);
 		}
@@ -67,22 +67,22 @@ namespace Mathematical_Sets
 		/// Remove an item from the set.
 		/// </summary>
 		/// <param name="item">The items to remove from the set.</param>
-		public void Remove(T item)
+		public void Remove(object item)
 		{
 			while (underlyingList.Contains(item))
 			{
 				underlyingList.Remove(item);
 			}
-
+			
 		}
 
 		/// <summary>
 		/// Remove items from the set.
 		/// </summary>
 		/// <param name="items">The items to remove from the set.</param>
-		public void Remove(T[] items)
+		public void Remove(object[] items)
 		{
-			foreach (T item in items)
+			foreach (object item in items)
 			{
 				Remove(item);
 			}
@@ -93,7 +93,7 @@ namespace Mathematical_Sets
 		/// Remove items from the set.
 		/// </summary>
 		/// <param name="items">The items to remove from the set.</param>
-		public void Remove(List<T> items)
+		public void Remove(List<object> items)
 		{
 			Remove(items);
 		}
@@ -102,7 +102,7 @@ namespace Mathematical_Sets
 		/// Remove items from the set.
 		/// </summary>
 		/// <param name="items">The items to remove from the set.</param>
-		public void Remove(Set<T> items)
+		public void Remove(Set items)
 		{
 			Remove(items);
 		}
@@ -130,11 +130,6 @@ namespace Mathematical_Sets
 			}
 		}
 
-		public override string ToString()
-		{
-			return "Set<" + typeof(T).Name + ">";
-		}
-
 		#region Print out contents
 		/// <summary>
 		/// Print the contents of the set.
@@ -157,7 +152,7 @@ namespace Mathematical_Sets
 		public string PrintSet()
 		{
 			string str = "{";
-			foreach (T item in this)
+			foreach (object item in this)
 			{
 				str += item.ToString() + ", ";
 			}
@@ -193,9 +188,9 @@ namespace Mathematical_Sets
 		#endregion
 
 		#region Enumeration
-		public IEnumerator<T> GetEnumerator()
+		public IEnumerator GetEnumerator()
 		{
-			return ((IEnumerable<T>)underlyingList).GetEnumerator();
+			return ((IEnumerable)underlyingList).GetEnumerator();
 		}
 
 		IEnumerator IEnumerable.GetEnumerator()
@@ -208,9 +203,9 @@ namespace Mathematical_Sets
 		/// <summary>
 		/// Returns whether this set is a subset of the given parameter.
 		/// </summary>
-		public bool IsSubsetOf(Set<T> otherSet)
+		public bool IsSubsetOf(Set otherSet)
 		{
-			foreach (T item in this)
+			foreach (object item in this)
 			{
 				if (otherSet.Contains(item) == false)
 				{
@@ -223,7 +218,7 @@ namespace Mathematical_Sets
 		/// <summary>
 		/// Less than operator is used as proper subset.
 		/// </summary>
-		public static bool operator <(Set<T> x, Set<T> y)
+		public static bool operator <(Set x, Set y)
 		{
 			return x.IsProperSubsetOf(y);
 		}
@@ -231,7 +226,7 @@ namespace Mathematical_Sets
 		/// <summary>
 		/// Less than operator is used as proper subset.
 		/// </summary>
-		public static bool operator >(Set<T> x, Set<T> y)
+		public static bool operator >(Set x, Set y)
 		{
 			return y < x;
 		}
@@ -239,7 +234,7 @@ namespace Mathematical_Sets
 		/// <summary>
 		/// Less than or equal to operator is used as subset.
 		/// </summary>
-		public static bool operator <=(Set<T> x, Set<T> y)
+		public static bool operator <=(Set x, Set y)
 		{
 			return x.IsEqualTo(y);
 		}
@@ -247,7 +242,7 @@ namespace Mathematical_Sets
 		/// <summary>
 		/// Less than or equal to operator is used as subset.
 		/// </summary>
-		public static bool operator >=(Set<T> x, Set<T> y)
+		public static bool operator >=(Set x, Set y)
 		{
 			return y <= x;
 		}
@@ -256,7 +251,7 @@ namespace Mathematical_Sets
 		/// <summary>
 		/// Returns whether this set is a proper subset of the given parameter.
 		/// </summary>
-		public bool IsProperSubsetOf(Set<T> otherSet)
+		public bool IsProperSubsetOf(Set otherSet)
 		{
 			return (otherSet.Size > this.Size) && (this.IsSubsetOf(otherSet));
 		}
@@ -266,16 +261,16 @@ namespace Mathematical_Sets
 		/// <summary>
 		/// Returns whether this set is equal to another set.
 		/// </summary>
-		private bool IsEqualTo(Set<T> otherSet)
+		private bool IsEqualTo(Set otherSet)
 		{
 			return IsSubsetOf(otherSet) && otherSet.Size == this.Size;
 		}
 
 		public override bool Equals(object? obj)
 		{
-			if (obj is Set<T>)
+			if (obj is Set)
 			{
-				return this.IsEqualTo((Set<T>)obj);
+				return this.IsEqualTo((Set)obj);
 			}
 			return false;
 		}
@@ -285,12 +280,12 @@ namespace Mathematical_Sets
 			return underlyingList.GetHashCode();
 		}
 
-		public static bool operator ==(Set<T> x, Set<T> y)
+		public static bool operator ==(Set x, Set y)
 		{
 			return x.Equals(y);
 		}
 
-		public static bool operator !=(Set<T> x, Set<T> y)
+		public static bool operator !=(Set x, Set y)
 		{
 			return !(x == y);
 		}
@@ -298,7 +293,7 @@ namespace Mathematical_Sets
 
 		#region Union
 
-		public void Union(Set<T> otherSet)
+		public void Union(Set otherSet)
 		{
 			Add(otherSet);
 		}
@@ -308,10 +303,10 @@ namespace Mathematical_Sets
 
 		#region Intersection
 
-		public static Set<T> Intersection(Set<T> x, Set<T> y)
+		public static Set Intersection(Set x, Set y)
 		{
-			Set<T> intersection = new Set<T>();
-			foreach (T item in x)
+			Set intersection = new Set();
+			foreach (object item in x)
 			{
 				if (y.Contains(item))
 				{
@@ -321,11 +316,15 @@ namespace Mathematical_Sets
 
 			return intersection;
 		}
-		public void Intersection(Set<T> otherSet)
+		public void Intersection(Set otherSet)
 		{
 			this.underlyingList = Intersection(this, otherSet).underlyingList;
 		}
 		#endregion
 
+		public object[] ToArray()
+		{
+			return underlyingList.ToArray();
+		}
 	}
 }
